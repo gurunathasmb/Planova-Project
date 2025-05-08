@@ -45,6 +45,15 @@ npm start
 
 ## Folder Structure
 Planova/
+├── backend/
+│   ├── models/
+│   ├── routes/
+│   └── ...
+├── frontend/
+│   ├── components/
+│   ├── pages/
+│   └── ...
+└── README.md
 
 
 ## Future Enhancements
