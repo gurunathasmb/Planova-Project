@@ -1,49 +1,55 @@
- Planova – Project Management System
-Planova is a comprehensive and intuitive project management system built to streamline collaboration between students and teachers. It helps manage academic projects, documentation, communication, and progress tracking—all in one platform.
+# 📌 Planova – Project Management System
 
- Features
-* Student Dashboard:
-View assigned projects, submit documents, request funds, and track project status.
+**Planova** is a comprehensive and intuitive project management system built to streamline collaboration between students and teachers. It helps manage academic projects, documentation, communication, and progress tracking—all in one platform.
 
-* Teacher Dashboard:
-Monitor project progress, review submissions, manage student teams, and approve/reject fund requests.
+---
 
-* Documentation Module:
-Upload, download, and organize project-related files within folders.
+## 🚀 Features
 
-* Discussion System:
-Send and receive updates/comments between students and teachers.
+- **Student Dashboard**  
+  View assigned projects, submit documents, request funds, and track project status.
 
-* Fund Request System:
-Students can raise requests with descriptions; teachers can accept or reject them with feedback.
+- **Teacher Dashboard**  
+  Monitor project progress, review submissions, manage student teams, and approve/reject fund requests.
 
-* Team Management:
-Students can create and update their project teams.
+- **Documentation Module**  
+  Upload, download, and organize project-related files within folders.
 
-* Authentication:
-Secure login system using JWT for role-based access.
+- **Discussion System**  
+  Send and receive updates/comments between students and teachers.
 
-## Tech Stack
-Frontend: React.js (with Tailwind CSS for styling)
+- **Fund Request System**  
+  Students can raise requests with descriptions; teachers can accept or reject them with feedback.
 
-Backend: Node.js + Express.js
+- **Team Management**  
+  Students can create and update their project teams.
 
-Database: MongoDB
+- **Authentication**  
+  Secure login system using JWT for role-based access.
 
-Authentication: JWT (JSON Web Tokens)
+---
 
-### How to Run Locally
-*Backend:-
+## 🛠️ Tech Stack
+
+- **Frontend**: React.js (with Tailwind CSS for styling)  
+- **Backend**: Node.js + Express.js  
+- **Database**: MongoDB  
+- **Authentication**: JWT (JSON Web Tokens)
+
+---
+
+## 📦 How to Run Locally
+
+### 🔹 Backend
+
 cd backend
 npm install
 npm start
 
-*Frontend
 cd frontend
 npm install
 npm start
 
-## Folder Structure
 Planova/
 ├── backend/
 │   ├── models/
@@ -54,9 +60,7 @@ Planova/
 │   ├── pages/
 │   └── ...
 └── README.md
-
-
-## Future Enhancements
+###Future Enhancements
 Add notification system
 
 Add export to PDF for reports
