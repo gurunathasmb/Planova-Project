@@ -45,7 +45,7 @@
 cd backend
 npm install
 npm start
-
+### 🔹 Frontend
 cd frontend
 npm install
 npm start
@@ -60,7 +60,8 @@ npm start
 - │   ├── pages/
 - │   └── ...
 - └── README.md
-###Future Enhancements
+
+- ###Future Enhancements
 Add notification system
 
 Add export to PDF for reports
