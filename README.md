@@ -51,8 +51,8 @@ npm install
 npm start
 
 - Planova/
-  ├── backend/
-  │   ├── models/
+- ├── backend/
+- │   ├── models/
 - │   ├── routes/
 - │   └── ...
 - ├── frontend/
