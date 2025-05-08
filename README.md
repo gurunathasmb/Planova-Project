@@ -44,7 +44,6 @@ npm install
 npm start
 
 ## Folder Structure
-
 Planova/
 ├── backend/
 │   ├── models/
@@ -55,6 +54,7 @@ Planova/
 │   ├── pages/
 │   └── ...
 └── README.md
+
 ## Future Enhancements
 Add notification system
 
