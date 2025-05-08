@@ -33,7 +33,7 @@ Database: MongoDB
 Authentication: JWT (JSON Web Tokens)
 
 ### How to Run Locally
-*Backend
+*Backend:-
 cd backend
 npm install
 npm start
@@ -44,8 +44,7 @@ npm install
 npm start
 
 ## Folder Structure
-Copy
-Edit
+
 Planova/
 ├── backend/
 │   ├── models/
