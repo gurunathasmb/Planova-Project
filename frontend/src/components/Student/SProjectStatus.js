@@ -5,7 +5,7 @@ import { handleSuccess, handleError } from '../../utils';
 import Sidebar from './SSidebar';
 import '../../css/StudentCss/sProjectStatus.css';
 // Keep all your imports and styles the same...
-import api from '../Api/axiosinstance'; // Your axios instance
+import api from '../../Api/axiosinstance'; // Your axios instance
 const SProjectStatus = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [project, setProject] = useState({ title: '', description: '' });

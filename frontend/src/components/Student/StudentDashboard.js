@@ -4,7 +4,7 @@ import Header from './SHeader';
 import { useNavigate } from 'react-router-dom';
 import { handleSuccess } from '../../utils';
 import '../../css/StudentCss/StudentDashboard.css';
-import api from '../Api/axiosinstance'; // Your axios instance
+import api from '../../Api/axiosinstance'; // Your axios instance
 function StudentDashboard({ onLogout }) {
   const [user, setUser] = useState(null);
   const [teamName, setTeamName] = useState('');

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { handleSuccess, handleError } from '../../utils';
 import Sidebar from './SSidebar';
 import '../../css/StudentCss/sDocumentation.css';
-import api from '../Api/axiosinstance';
+import api from '../../Api/axiosinstance';
 
 const SDocumentation = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);

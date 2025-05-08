@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './SSidebar'; // You must have this component
 import '../../css/StudentCss/sFunds.css'; // Your CSS
-import api from '../Api/axiosinstance' // Your axios instance
+import api from '../../Api/axiosinstance' // Your axios instance
 
 const SFunds = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);

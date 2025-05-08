@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import { handleSuccess, handleError } from '../../utils';
 import Sidebar from './TSidebar';
 import '../../css/TeacherCss/tProjectStatus.css';
-import api from '../Api/axiosinstance'; // Your axios instance
+import api from '../../Api/axiosinstance'; // Your axios instance
 const TProjectStatus = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [studentUpdates, setStudentUpdates] = useState([]);

@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from './TSidebar';
 import Header from './THeader';
 import '../../css/TeacherCss/tFunds.css';
-import api from '../Api/axiosinstance'; // Your axios instance
+import api from '../../Api/axiosinstance'; // Your axios instance
 function TFunds({ user, onLogout }) {
   const [fundingRequests, setFundingRequests] = useState([]);
   const [activeTab, setActiveTab] = useState('Pending');

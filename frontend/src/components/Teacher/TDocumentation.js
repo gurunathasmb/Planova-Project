@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { handleSuccess, handleError } from '../../utils';
 import Sidebar from './TSidebar';
 import '../../css/TeacherCss/tDocumentation.css';
-import api from '../Api/axiosinstance'; // Your axios instance
+import api from '../../Api/axiosinstance'; // Your axios instance
 
 const TDocumentation = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);

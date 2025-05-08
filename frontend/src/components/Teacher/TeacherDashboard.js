@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from './TSidebar';
 import Header from './THeader';
 import '../../css/TeacherCss/TeacherDashboard.css';
-import api from '../Api/axiosinstance'; // Your axios instance
+import api from '../../Api/axiosinstance'; // Your axios instance
 function TeacherDashboard({ onLogout }) {
   const [user, setUser] = useState(null);
   const [assignedStudentTeams, setAssignedStudentTeams] = useState([]);
