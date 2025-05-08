@@ -50,7 +50,8 @@ cd frontend
 npm install
 npm start
 ---
-##📁 Folder Structure
+
+## 📁 Folder Structure
 - Planova/
 - ├── backend/
 - │   ├── models/
@@ -62,7 +63,7 @@ npm start
 - │   └── ...
 - └── README.md
 ---
-###Future Enhancements
+### Future Enhancements
 Add notification system
 
 Add export to PDF for reports
