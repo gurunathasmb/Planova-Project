@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../utils';
 import '../css/Login.css';
-
+import api from '../Api/axiosinstance'; // Your axios instance
 function Login() {
     const [loginInfo, setLoginInfo] = useState({
         email: '',
@@ -19,44 +19,42 @@ function Login() {
     };
 
     const handleLogin = async (e) => {
-        e.preventDefault();
-        const { email, password, role } = loginInfo;
-        if (!email || !password || !role) {
-            return handleError('All fields are required');
-        }
-
-        try {
-            const response = await fetch(`http://localhost:8000/api/auth/login`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(loginInfo)
-            });
-
-            const result = await response.json();
-            const { success, message, token, user, error } = result;
-
-            if (success) {
-                handleSuccess(message);
-                localStorage.setItem('token', token);
-                localStorage.setItem('loggedInUser', JSON.stringify(user));
-                setTimeout(() => {
-                    if (user.role === 'student') {
-                        navigate('/student/dashboard');
-                    } else {
-                        navigate('/teacher/dashboard');
-                    }
-                }, 1000);
-            } else if (error) {
-                handleError(error?.details[0]?.message || message);
+      e.preventDefault();
+      const { email, password, role } = loginInfo;
+      if (!email || !password || !role) {
+        return handleError('All fields are required');
+      }
+    
+      try {
+        const response = await api.post('/auth/login', loginInfo, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+    
+        const { success, message, token, user, error } = response.data;
+    
+        if (success) {
+          handleSuccess(message);
+          localStorage.setItem('token', token);
+          localStorage.setItem('loggedInUser', JSON.stringify(user));
+          setTimeout(() => {
+            if (user.role === 'student') {
+              navigate('/student/dashboard');
             } else {
-                handleError(message);
+              navigate('/teacher/dashboard');
             }
-        } catch (err) {
-            handleError(err.message);
+          }, 1000);
+        } else if (error) {
+          handleError(error?.details[0]?.message || message);
+        } else {
+          handleError(message);
         }
+      } catch (err) {
+        handleError(err.response?.data?.message || err.message || 'Something went wrong');
+      }
     };
+    
 
     return (
         <div className={`container ${loginInfo.role}`}>

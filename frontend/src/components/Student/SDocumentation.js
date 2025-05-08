@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { handleSuccess, handleError } from '../../utils';
 import Sidebar from './SSidebar';
 import '../../css/StudentCss/sDocumentation.css';
-import axios from 'axios';
+import api from '../Api/axiosinstance';
 
 const SDocumentation = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -38,7 +38,7 @@ const SDocumentation = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:8000/api/student/documentation', {
+      const response = await api.get('/student/documentation', {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -64,7 +64,7 @@ const SDocumentation = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:8000/api/student/teammember', {
+      const response = await api.get('/student/teammember', {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -112,7 +112,7 @@ const SDocumentation = () => {
 
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.post('http://localhost:8000/api/student/documentation/upload', formData, {
+          const response = await api.post('/student/documentation/upload', formData, {
             headers: {
               Authorization: `Bearer ${token}`,
               'Content-Type': 'multipart/form-data'
@@ -138,7 +138,7 @@ const SDocumentation = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.delete(`http://localhost:8000/api/student/documentation/${id}`, {
+      const response = await api.delete(`/student/documentation/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -153,10 +153,10 @@ const SDocumentation = () => {
       console.error(error);
     }
   };
-
+  const FILE_BASE_URL = process.env.NEXT_PUBLIC_FILE_BASE_URL;
   const handleDownload = (item) => {
     showNotification(`Downloading file: ${item.fileName}`);
-    const downloadUrl = `http://localhost:8000/uploads/${item.fileName}`;
+    const downloadUrl = `${FILE_BASE_URL}/uploads/${item.fileName}`;
     window.open(downloadUrl, '_blank');
   };
 

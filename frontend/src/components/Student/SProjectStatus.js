@@ -5,7 +5,7 @@ import { handleSuccess, handleError } from '../../utils';
 import Sidebar from './SSidebar';
 import '../../css/StudentCss/sProjectStatus.css';
 // Keep all your imports and styles the same...
-
+import api from '../Api/axiosinstance'; // Your axios instance
 const SProjectStatus = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [project, setProject] = useState({ title: '', description: '' });
@@ -20,7 +20,7 @@ const SProjectStatus = () => {
 
   const fetchProjectUpdates = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/student/project-updates', {
+      const response = await api.get('/student/project-updates', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const result = await response.json();
@@ -42,7 +42,7 @@ const SProjectStatus = () => {
 
     const fetchTeachers = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/student/teacher', {
+        const response = await api.get('/student/teacher', {
           headers: { Authorization: `Bearer ${token}` }
         });
         const result = await response.json();
@@ -80,11 +80,11 @@ const SProjectStatus = () => {
 
     try {
       const studentId = loggedInUser._id;
-      const response = await fetch('http://localhost:8000/api/student/projects/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ ...project, teacherId: selectedTeacherId, studentId })
-      });
+      const response = await api.post('/student/projects/submit', {
+        ...project,
+        teacherId: selectedTeacherId,
+        studentId,
+      });      
 
       const result = await response.json();
       if (result.success) {
@@ -104,30 +104,26 @@ const SProjectStatus = () => {
     if (!messageText.trim() || !selectedTeacherId) {
       return handleError("Please select a teacher and write a message");
     }
-
     try {
-      const response = await fetch('http://localhost:8000/api/student/send-status-update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({
-          teacherId: selectedTeacherId,
-          message: messageText,
-          projectTitle: project.title || ''
-        })
+      const response = await api.post('/student/send-status-update', {
+        teacherId: selectedTeacherId,
+        message: messageText,
+        projectTitle: project.title || ''
       });
-
-      const result = await response.json();
-      if (result.success) {
+    
+      if (response.data.success) {
         handleSuccess("Status update sent!");
         setMessageText('');
         setSelectedTeacherId('');
         fetchProjectUpdates(); // Re-fetch to show new update
       } else {
-        handleError(result.message);
+        handleError(response.data.message);
       }
-    } catch {
+    } catch (error) {
+      console.error(error);
       handleError('Failed to send status update');
     }
+    
   };
 
   const handleSelectUpdate = (update) => {

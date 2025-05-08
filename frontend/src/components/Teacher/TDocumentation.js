@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { handleSuccess, handleError } from '../../utils';
 import Sidebar from './TSidebar';
 import '../../css/TeacherCss/tDocumentation.css';
-import axios from 'axios';
+import api from '../Api/axiosinstance'; // Your axios instance
 
 const TDocumentation = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -24,14 +24,14 @@ const TDocumentation = () => {
   const fetchDocumentation = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/teacher/documents', {
+      const response = await api.get('/teacher/documents', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.data.success) {
         const docsWithStudentNames = await Promise.all(
           response.data.docs.map(async (doc) => {
             // Fetch student info using the studentId from the populated student data
-            const studentResponse = await axios.get(`http://localhost:8000/api/teacher/student-updates`, {
+            const studentResponse = await api.get(`/teacher/student-updates`, {
               headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -60,10 +60,10 @@ const TDocumentation = () => {
     handleSuccess('User Logged out');
     setTimeout(() => navigate('/login'), 1000);
   };
-
+  const FILE_BASE_URL = process.env.NEXT_PUBLIC_FILE_BASE_URL;
   const handleDownload = (item) => {
     showNotification(`Downloading file: ${item.fileName}`);
-    const downloadUrl = `http://localhost:8000/uploads/${item.fileName}`;
+    const downloadUrl = `${FILE_BASE_URL}/uploads/${item.fileName}`;
     window.open(downloadUrl, '_blank');
   };
 
@@ -73,17 +73,18 @@ const TDocumentation = () => {
       const response = await axios.delete(`http://localhost:8000/api/teacher/documents/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
+    
       if (response.data.success) {
         handleSuccess('File deleted successfully!');
-        fetchDocumentation();
+        fetchDocumentation();  // Re-fetch the documentation list after deletion
       } else {
         handleError(response.data.message || 'Deletion failed.');
       }
     } catch (error) {
       handleError('Error deleting file.');
-      console.error(error);
+      console.error('Delete error:', error);
     }
+    
   };
 
   const showNotification = (message) => {

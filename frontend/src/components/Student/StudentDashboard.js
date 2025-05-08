@@ -4,7 +4,7 @@ import Header from './SHeader';
 import { useNavigate } from 'react-router-dom';
 import { handleSuccess } from '../../utils';
 import '../../css/StudentCss/StudentDashboard.css';
-
+import api from '../Api/axiosinstance'; // Your axios instance
 function StudentDashboard({ onLogout }) {
   const [user, setUser] = useState(null);
   const [teamName, setTeamName] = useState('');
@@ -33,33 +33,36 @@ function StudentDashboard({ onLogout }) {
 
   const fetchStudentData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/student/profile', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!response.ok) throw new Error('Failed to load student data');
-      const data = await response.json();
-      const user = data.user;
-      setUser(user);
-      localStorage.setItem('loggedInUser', JSON.stringify(user));
+      const response = await api.get('/student/profile');
+    
+      if (response.data && response.data.user) {
+        const user = response.data.user;
+        setUser(user);
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+      } else {
+        throw new Error('Failed to load student data');
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching student profile:', error);
     }
+    
   };
 
   const fetchTeamInfo = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/student/team', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.status === 404) return setHasTeam(false);
-      if (!response.ok) throw new Error('Failed to load team info');
-
-      const data = await response.json();
-      const team = data.team;
-
+      const response = await api.get('/student/team');
+    
+      if (response.status === 404) {
+        setHasTeam(false);
+        return;
+      }
+    
+      if (!response.data || !response.data.team) {
+        throw new Error('Failed to load team info');
+      }
+    
+      const team = response.data.team;
+      
       setTeamName(team.teamName);
       setTeamMembers(team.teamMembers.map(m => m.name));
       setAssignedTeachers([team.assignedTeacher]);
@@ -67,34 +70,37 @@ function StudentDashboard({ onLogout }) {
     } catch (err) {
       console.error('Error fetching team:', err);
     }
+    
   };
 
   const fetchAvailableTeachers = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/student/teacher', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!response.ok) throw new Error('Failed to fetch teachers');
-      const data = await response.json();
-      setAvailableTeachers(data.teachers);
+      const response = await api.get('/student/teacher');
+    
+      if (!response.data || !response.data.teachers) {
+        throw new Error('Failed to fetch teachers');
+      }
+    
+      setAvailableTeachers(response.data.teachers);
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching teachers:', error);
     }
+    
   };
 
   const fetchAllMembers = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/student/members', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!response.ok) throw new Error('Failed to fetch members');
-      const data = await response.json();
-      setAllMembers(data.members);
+      const response = await api.get('/student/members');
+    
+      if (!response.data || !response.data.members) {
+        throw new Error('Failed to fetch members');
+      }
+    
+      setAllMembers(response.data.members);
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching members:', error);
     }
+    
   };
 
   const saveTeamData = async () => {
@@ -122,20 +128,25 @@ function StudentDashboard({ onLogout }) {
         : availableTeachers.find(t => t.name === assignedTeacherObj);
 
       if (!teacherDetails) throw new Error("Selected teacher not found");
-
-      const response = await fetch('http://localhost:8000/api/student/team', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
+      try {
+        const response = await api.post('/student/team', {
           teamName,
           teamMembers: memberDetails,
           assignedTeacher: teacherDetails,
           createdBy: user._id, // Pass the user ID here
-        }),
-      });
+        });
+      
+        if (response.data.success) {
+          // Handle success (for example, notify user)
+          console.log('Team created successfully');
+        } else {
+          // Handle error (response message from server)
+          console.error(response.data.message);
+        }
+      } catch (error) {
+        console.error('Error creating team:', error);
+      }
+      
 
       if (!response.ok) throw new Error('Failed to save team data');
 

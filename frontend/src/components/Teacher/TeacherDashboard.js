@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from './TSidebar';
 import Header from './THeader';
 import '../../css/TeacherCss/TeacherDashboard.css';
-
+import api from '../Api/axiosinstance'; // Your axios instance
 function TeacherDashboard({ onLogout }) {
   const [user, setUser] = useState(null);
   const [assignedStudentTeams, setAssignedStudentTeams] = useState([]);
@@ -20,26 +20,31 @@ function TeacherDashboard({ onLogout }) {
     }
   }, []);
 
-  // Fetch teams assigned to the current teacher from backend
-  const fetchAssignedStudentTeams = async (token) => {
-    try {
-      const response = await fetch('http://localhost:8000/api/teacher/teams', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+  // Fetch teams assigned to the current teacher from backen
+const fetchAssignedStudentTeams = async (token) => {
+  if (!token) {
+    console.error('No token found. Please log in first.');
+    return; // Early return if no token is found
+  }
 
-      const data = await response.json();
+  try {
+    const response = await api.get('/teacher/teams', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      if (data.success) {
-        setAssignedStudentTeams(data.teams);
-      } else {
-        console.error('Failed to fetch assigned teams.');
-      }
-    } catch (error) {
-      console.error('Error fetching assigned teams:', error);
+    if (response.data.success) {
+      setAssignedStudentTeams(response.data.teams);
+    } else {
+      console.error('Failed to fetch assigned teams:', response.data.message || 'Unknown error');
     }
-  };
+  } catch (error) {
+    console.error('Error fetching assigned teams:', error);
+  }
+};
+
+  
 
   const toggleExpandTeam = (index) => {
     setExpandedTeam(expandedTeam === index ? null : index);

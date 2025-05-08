@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../Api/axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from './TSidebar';
 import Header from './THeader';
 import '../../css/TeacherCss/tFunds.css';
-
+import api from '../Api/axiosinstance'; // Your axios instance
 function TFunds({ user, onLogout }) {
   const [fundingRequests, setFundingRequests] = useState([]);
   const [activeTab, setActiveTab] = useState('Pending');
@@ -19,7 +18,7 @@ function TFunds({ user, onLogout }) {
   // Load funding requests for the assigned teacher
   const loadFundingRequests = async () => {
     try {
-      const response = await axios.get('/teacher/funds', {
+      const response = await api.get('/teacher/funds', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -34,7 +33,7 @@ function TFunds({ user, onLogout }) {
   // Handle decision (approve/reject) on a funding request
   const handleRequestDecision = async (requestId, decision) => {
     try {
-      await axios.post('/teacher/funds/assign', {
+      await api.post('/teacher/funds/assign', {
         fundId: requestId,
         status: decision,
         teacherComments: decisionNotes

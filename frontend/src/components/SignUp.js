@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../utils';
 import '../css/SignUp.css';
-
+import api from '../Api/axiosinstance'; // Your axios instance
 function Signup() {
     const [signupInfo, setSignupInfo] = useState({
         name: '',
@@ -13,42 +13,42 @@ function Signup() {
     });
 
     const navigate = useNavigate();
-
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const handleChange = (e) => {
         const { name, value } = e.target;
         setSignupInfo(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSignup = async (e) => {
-        e.preventDefault();
-        const { name, email, password, role } = signupInfo;
-        if (!name || !email || !password || !role) {
-            return handleError('All fields are required');
+      e.preventDefault();
+      const { name, email, password, role } = signupInfo;
+      
+      if (!name || !email || !password || !role) {
+        return handleError('All fields are required');
+      }
+    
+      try {
+        const response = await api.post('/auth/signup', signupInfo, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+    
+        const { success, message, error } = response.data;
+    
+        if (success) {
+          handleSuccess(message);
+          setTimeout(() => navigate('/login'), 1000);
+        } else if (error) {
+          handleError(error?.details[0]?.message || message);
+        } else {
+          handleError(message);
         }
-
-        try {
-            const response = await fetch(`http://localhost:8000/api/auth/signup`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(signupInfo)
-            });
-            const result = await response.json();
-            const { success, message, error } = result;
-
-            if (success) {
-                handleSuccess(message);
-                setTimeout(() => navigate('/login'), 1000);
-            } else if (error) {
-                handleError(error?.details[0]?.message || message);
-            } else {
-                handleError(message);
-            }
-        } catch (err) {
-            handleError(err.message);
-        }
+      } catch (err) {
+        handleError(err.response?.data?.message || err.message || 'Something went wrong');
+      }
     };
+    
 
     return (
         <div className={`container ${signupInfo.role}`}>

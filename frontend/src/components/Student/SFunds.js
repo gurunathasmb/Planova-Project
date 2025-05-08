@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './SSidebar'; // You must have this component
 import '../../css/StudentCss/sFunds.css'; // Your CSS
-import axios from '../Api/axios'; // Your axios instance
+import api from '../Api/axiosinstance' // Your axios instance
 
 const SFunds = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -31,7 +31,7 @@ const SFunds = () => {
   const fetchTeamInfo = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('/student/teammember', {
+      const res = await api.get('/student/teammember', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success && res.data.team) {
@@ -53,7 +53,7 @@ const SFunds = () => {
   const fetchTransactions = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('/student/fund-requests', {
+      const res = await api.get('/student/fund-requests', {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Sort by latest first

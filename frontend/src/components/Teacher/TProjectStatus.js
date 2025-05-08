@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import { handleSuccess, handleError } from '../../utils';
 import Sidebar from './TSidebar';
 import '../../css/TeacherCss/tProjectStatus.css';
-
+import api from '../Api/axiosinstance'; // Your axios instance
 const TProjectStatus = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [studentUpdates, setStudentUpdates] = useState([]);
@@ -19,26 +19,36 @@ const TProjectStatus = () => {
     fetchStudentUpdates();
   }, []);
 
-  const fetchStudentUpdates = async () => {
+  const fetchStudentUpdates = async (token) => {
+    if (!token) {
+      console.error('No token found. Please log in first.');
+      return; // Early return if no token is found
+    }
+  
     try {
-      const response = await fetch('http://localhost:8000/api/teacher/student-updates', {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await api.get('/teacher/student-updates', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-      const result = await response.json();
-      if (result.success && Array.isArray(result.updates)) {
+  
+      if (response.data.success && Array.isArray(response.data.updates)) {
         // If using populate, student name may be inside studentId
-        const formattedUpdates = result.updates.map(update => ({
+        const formattedUpdates = response.data.updates.map(update => ({
           ...update,
           studentName: update.studentId?.name || 'Unknown Student',
         }));
+  
         setStudentUpdates(formattedUpdates);
       } else {
-        handleError(result.message || 'Unexpected response format');
+        handleError(response.data.message || 'Unexpected response format');
       }
     } catch (error) {
       handleError('Failed to fetch student updates');
+      console.error(error);
     }
   };
+  
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -58,25 +68,30 @@ const TProjectStatus = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/teacher/send-comment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({
+      const response = await api.post(
+        '/teacher/send-comment',
+        {
           updateId: selectedUpdate._id,
-          comment: commentText
-        })
-      });
-
-      const result = await response.json();
-      if (result.success) {
+          comment: commentText,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.data.success) {
         handleSuccess('Comment sent successfully!');
         setCommentText('');
-        fetchStudentUpdates();
+        fetchStudentUpdates(); // Refetch the updates to reflect the comment
       } else {
-        handleError(result.message);
+        handleError(response.data.message || 'Failed to send comment');
       }
     } catch (error) {
       handleError('Failed to send comment');
+      console.error(error);
     }
   };
 
