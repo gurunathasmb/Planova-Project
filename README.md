@@ -50,16 +50,16 @@ cd frontend
 npm install
 npm start
 
-Planova/
-├── backend/
-│   ├── models/
-│   ├── routes/
-│   └── ...
-├── frontend/
-│   ├── components/
-│   ├── pages/
-│   └── ...
-└── README.md
+- Planova/
+- ├── backend/
+- │   ├── models/
+- │   ├── routes/
+- │   └── ...
+- ├── frontend/
+- │   ├── components/
+- │   ├── pages/
+- │   └── ...
+- └── README.md
 ###Future Enhancements
 Add notification system
 
